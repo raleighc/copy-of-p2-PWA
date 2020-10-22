@@ -1,134 +1,86 @@
 $(document).ready(function () {
-
-  $("#newStartEnterBtn").on("click", function (event) {
-    $.ajax({
-			method: "DELETE",
-			url: "/api/ghosts",
-		});
-		$.ajax({
-			method: "DELETE",
-			url: "/api/users",
-		});
-  });
-
-  $("#name-btn").on("click", function (event) {
-    event.preventDefault();
-
-    // make a userName obj
-    var userName = {
-      // name from name input
-      fullName: $("#fullName").val().trim(),
-      identifier: 1
-    };
-    // console.log(userName);
-    // send an AJAX POST-request with jQuery
-    $.post("/api/users", userName)
-      // on success, run this callback
-      .then((response) => {
-        $(".characterName").text(response.fullName);
-        // displayAge();
-        console.log(response);
-        displaystay();
+  function a() {
+    $("#nameForm").hide(),
+      $("#foyerOption1").stop().show(),
+      $("#foyerStayChoice").stop().show(),
+      $("#foyerPosRes").stop().hide(),
+      $("#foyerNegRes").stop().hide(),
+      $("#ageForm").stop().hide(),
+      $("#genderForm").stop().hide(),
+      $("#foyerAgeGender").stop().hide();
+  }
+  function b() {
+    $("#nameForm").hide(),
+      $("#foyerOption1").stop().hide(),
+      $("#foyerStayChoice").stop().hide(),
+      $("#foyerPosRes").stop().show(),
+      $("#foyerNegRes").stop().hide(),
+      $("#ageForm").stop().hide(),
+      $("#genderForm").stop().hide(),
+      $("#foyerAgeGender").stop().hide();
+  }
+  function c() {
+    $("#nameForm").hide(),
+      $("#foyerOption1").stop().hide(),
+      $("#foyerStayChoice").stop().hide(),
+      $("#foyerPosRes").stop().hide(),
+      $("#foyerNegRes").stop().show(),
+      $("#ageForm").stop().hide(),
+      $("#genderForm").stop().hide(),
+      $("#foyerAgeGender").stop().hide();
+  }
+  function d() {
+    $("#nameForm").hide(),
+      $("#foyerOption1").stop().hide(),
+      $("#foyerStayChoice").stop().hide(),
+      $("#foyerPosRes").stop().hide(),
+      $("#foyerNegRes").stop().hide(),
+      $("#ageForm").stop().show(),
+      $("#genderForm").stop().show(),
+      $("#foyerAgeGender").stop().show();
+  }
+  function e() {
+    $("#nameForm").hide(),
+      $("#foyerOption1").stop().hide(),
+      $("#foyerStayChoice").stop().hide(),
+      $("#foyerPosRes").stop().hide(),
+      $("#foyerNegRes").stop().hide(),
+      $("#ageForm").stop().hide(),
+      $("#genderForm").stop().hide(),
+      $("#foyerAgeGender").stop().hide(),
+      $("#foyerRoomChoice").stop().show(),
+      $("#foyerLastPrompt").stop().show();
+  }
+  $("#newStartEnterBtn").on("click", function () {
+    $.ajax({ method: "DELETE", url: "/api/ghosts" }),
+      $.ajax({ method: "DELETE", url: "/api/users" });
+  }),
+    $("#name-btn").on("click", function (b) {
+      b.preventDefault();
+      var c = { fullName: $("#fullName").val().trim(), identifier: 1 };
+      $.post("/api/users", c).then((b) => {
+        $(".characterName").text(b.fullName), console.log(b), a();
       });
-   
-  });
-
-  function displaystay() {
-    $("#nameForm").hide();
-    $("#foyerOption1").stop().show();
-    $("#foyerStayChoice").stop().show();
-    $("#foyerPosRes").stop().hide();
-    $("#foyerNegRes").stop().hide();
-    $("#ageForm").stop().hide();
-    $("#genderForm").stop().hide();
-    $("#foyerAgeGender").stop().hide();
-  }
-
-  $("#foyer-pos-btn").on("click", function (event) {
-    event.preventDefault();
-    displayPosFoyer();
-  });
-
-  function displayPosFoyer() {
-    $("#nameForm").hide();
-    $("#foyerOption1").stop().hide();
-    $("#foyerStayChoice").stop().hide();
-    $("#foyerPosRes").stop().show();
-    $("#foyerNegRes").stop().hide();
-    $("#ageForm").stop().hide();
-    $("#genderForm").stop().hide();
-    $("#foyerAgeGender").stop().hide();
-  }
-
-  $("#foyer-neg-btn").on("click", function (event) {
-    event.preventDefault();
-    displayNegFoyer();
-  });
-
-  function displayNegFoyer() {
-    $("#nameForm").hide();
-    $("#foyerOption1").stop().hide();
-    $("#foyerStayChoice").stop().hide();
-    $("#foyerPosRes").stop().hide();
-    $("#foyerNegRes").stop().show();
-    $("#ageForm").stop().hide();
-    $("#genderForm").stop().hide();
-    $("#foyerAgeGender").stop().hide();
-  }
-
-  $("#posNext-btn").on("click", function (event) {
-    event.preventDefault();
-    displaygender();
-  });
-  $("#negNext-btn").on("click", function (event) {
-    event.preventDefault();
-    displaygender();
-  });
-
-  function displaygender() {
-    $("#nameForm").hide();
-    $("#foyerOption1").stop().hide();
-    $("#foyerStayChoice").stop().hide();
-    $("#foyerPosRes").stop().hide();
-    $("#foyerNegRes").stop().hide();
-    $("#ageForm").stop().show();
-    $("#genderForm").stop().show();
-    $("#foyerAgeGender").stop().show();
-  }
-
-  $("#age-btn").on("click", function (event) {
-    event.preventDefault();
-
-    // make a userAge obj
-    var userUpdate = {
-      // age from age input
-      age: $("#age").val(),
-      gender: $("#gender").val(),
-    };
-    console.log(userUpdate);
-    $.ajax({
-      method: "PUT",
-      url: "/api/users",
-      data: userUpdate,
-    }).then(userUpdate);
-
-    displaylast()
-    
-  });
-  
-  function displaylast() {
-    $("#nameForm").hide();
-    $("#foyerOption1").stop().hide();
-    $("#foyerStayChoice").stop().hide();
-    $("#foyerPosRes").stop().hide();
-    $("#foyerNegRes").stop().hide();
-    $("#ageForm").stop().hide();
-    $("#genderForm").stop().hide();
-    $("#foyerAgeGender").stop().hide();
-    $("#foyerRoomChoice").stop().show();
-    $("#foyerLastPrompt").stop().show();
-  }
+    }),
+    $("#foyer-pos-btn").on("click", function (a) {
+      a.preventDefault(), b();
+    }),
+    $("#foyer-neg-btn").on("click", function (a) {
+      a.preventDefault(), c();
+    }),
+    $("#posNext-btn").on("click", function (a) {
+      a.preventDefault(), d();
+    }),
+    $("#negNext-btn").on("click", function (a) {
+      a.preventDefault(), d();
+    }),
+    $("#age-btn").on("click", function (a) {
+      a.preventDefault();
+      var b = { age: $("#age").val(), gender: $("#gender").val() };
+      console.log(b),
+        $.ajax({ method: "PUT", url: "/api/users", data: b }).then(b),
+        e();
+    }),
+    $(document).foundation();
+}),
   $(document).foundation();
-});
-
-$(document).foundation();

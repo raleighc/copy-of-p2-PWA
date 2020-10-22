@@ -1,37 +1,28 @@
-const express = require("express");
-const html = express.Router();
-// const db = require("../models");
-
-module.exports = function (app) {
-  app.get("/", (req, res) => {
-    res.render("index");
-  });
-
-  app.get("/startpage/:id", (req, res) => {
-    res.render("startpage");
-  });
-
-  app.get("/home/:id", (req, res) => {
-    res.render("home");
-  });
-
-  app.get("/foyer/:id", (req, res) => {
-    res.render("foyer");
-  });
-
-  app.get("/ghosts/:id", (req, res) => {
-    res.render("ghosts");
-  });
-
-  app.get("/room1/:id", (req, res) => {
-    res.render("room1");
-  });
-
-  app.get("rooms/:id", (req, res) => {
-    res.render("room2");
-  });
-
-  app.get("rooms/:id", (req, res) => {
-    res.render("room3");
-  });
+const express = require("express"),
+  html = express.Router();
+module.exports = function (a) {
+  a.get("/", (a, b) => {
+    b.render("index");
+  }),
+    a.get("/startpage/:id", (a, b) => {
+      b.render("startpage");
+    }),
+    a.get("/home/:id", (a, b) => {
+      b.render("home");
+    }),
+    a.get("/foyer/:id", (a, b) => {
+      b.render("foyer");
+    }),
+    a.get("/ghosts/:id", (a, b) => {
+      b.render("ghosts");
+    }),
+    a.get("/room1/:id", (a, b) => {
+      b.render("room1");
+    }),
+    a.get("rooms/:id", (a, b) => {
+      b.render("room2");
+    }),
+    a.get("rooms/:id", (a, b) => {
+      b.render("room3");
+    });
 };
