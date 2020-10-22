@@ -1,18 +1,225 @@
-const db = require("../models"),
-  axios = require("axios");
-module.exports = (a) => {
-  function b() {
+// const express = require("express")
+const db = require("../models");
+const axios = require("axios");
+
+module.exports = (app) => {
+  // Views Routes
+
+  // home ghost routes for Ghost + User information
+  app.get("/home/1", (req, res) => {
+    //
+    db.Ghost.findOne({
+      where: { deadFor: 170 },
+      raw: true,
+    })
+      .then((data) => {
+        let tempGhost = {
+          fullName: data.fullName,
+          deadFor: data.deadFor,
+        };
+        return tempGhost;
+      })
+      .then((response) => {
+        res.render("home", { entryGhost: response });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
+  app.post("/api/users", (req, res) => {
+    console.log(req.body);
+    db.User.create(req.body).then((newUser) => {
+      res.json(newUser);
+    });
+  });
+
+  app.put("/api/users", function (req, res) {
+    console.log(req.data);
+    db.User.update(
+      {
+        age: req.body.age,
+        gender: req.body.gender,
+      },
+      {
+        where: {
+          identifier: 1,
+        },
+      }
+    ).then((dbUser) => {
+      res.json(dbUser);
+    });
+  });
+
+  // room 1 ghost routes for Ghost + User information
+  app.get("/room1/2", (req, res) => {
+    //
+    db.Ghost.findOne({
+      where: { deadFor: 65 },
+      raw: true,
+    })
+      .then((data) => {
+        let tempGhost = {
+          fullName: data.fullName,
+          deadFor: data.deadFor,
+          homeTown: data.homeTown,
+          faveSport: data.faveSport,
+        };
+        return tempGhost;
+      })
+      .then((response) => {
+        db.User.findOne({
+          where: { identifier: 1 },
+          raw: true,
+        })
+          .then((results) => {
+            let nameOfUser = {
+              fullName: results.fullName,
+            };
+            res.render("room1", { entryGhost: response, viewUser: nameOfUser });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+  });
+
+  //room 2 ghost routes for Ghost + User information
+  app.get("/room2/3", (req, res) => {
+    //=============
+    db.Ghost.findOne({
+      where: { deadFor: 9 },
+      raw: true,
+    })
+      .then(function (data) {
+        let tempGhost = {
+          fullName: data.fullName,
+          deadFor: data.deadFor,
+          homeTown: data.homeTown,
+          faveSport: data.faveSport,
+        };
+        return tempGhost;
+      })
+      .then((response) => {
+        //==========
+        db.User.findOne({
+          where: { identifier: 1 },
+          raw: true,
+        })
+          .then((results) => {
+            let nameOfUser = {
+              fullName: results.fullName,
+            };
+            return nameOfUser;
+          })
+          .then((flow) => {
+            db.Ghost.findOne({
+              where: { deadFor: 170 },
+              raw: true,
+            }).then((ghostData) => {
+              let frontGhost = {
+                fullName: ghostData.fullName,
+              };
+              res.render("room2", {
+                entryGhost: response,
+                viewUser: flow,
+                frontGhost: frontGhost,
+              });
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+  });
+
+  //room 3 ghost routes for Ghost name/favsport + User information
+
+  app.get("/room3/4", (req, res) => {
+    3;
+    //=============
+    db.Ghost.findOne({
+      where: { deadFor: 272 },
+      raw: true,
+    })
+      .then(function (data) {
+        let tempGhost = {
+          fullName: data.fullName,
+          deadFor: data.deadFor,
+          homeTown: data.homeTown,
+          faveSport: data.faveSport,
+        };
+        return tempGhost;
+      })
+      .then((response) => {
+        //==========
+        // db.User.findOne({
+        //   where: { id: 1 },
+        //   raw: true,
+        // })
+        //   .then((results) => {
+        //     let nameOfUser = {
+        //       fullName: results.fullName,
+        //     };
+        //     return nameOfUser;
+        //   })
+        //   .then((flow) => {
+        db.Ghost.findOne({
+          where: { deadFor: 170 },
+          raw: true,
+        }).then((ghostData) => {
+          let frontGhost = {
+            fullName: ghostData.fullName,
+          };
+          res.render("room3", {
+            entryGhost: response,
+            // viewUser: flow,
+            frontGhost: frontGhost,
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
+  app.delete("/api/ghosts", function (req, res) {
+    db.Ghost.destroy({
+      where: { deadFor: [170, 65, 9, 272] },
+    }
+    ).then(() => {
+      introGhost();
+    }).catch(() => {
+      console.log();
+    });
+  });
+  
+  app.delete("/api/users", function (req, res) {
+    db.User.destroy({
+      where: {
+        identifier: 1
+      }
+    }
+    ).then(() => {
+    }).catch(() => {
+      console.log();
+    });
+  });
+  
+  introGhost();
+  
+  function introGhost() {
     axios
       .get("https://api.namefake.com/english-united-states/female/")
-      .then(function (a) {
+      .then(function (res) {
         db.Ghost.create({
-          fullName: a.data.name,
+          fullName: res.data.name,
           deadFor: 170,
           homeTown: "Atlanta, Georgia",
-          faveSport: a.data.sport,
+          faveSport: res.data.sport,
         })
           .then(() => {
-            c();
+            ghostOneInfo();
           })
           .catch(() => {
             console.log();
@@ -22,18 +229,18 @@ module.exports = (a) => {
         console.log();
       });
   }
-  function c() {
+  function ghostOneInfo() {
     axios
       .get("https://api.namefake.com/english-united-states/female/")
-      .then(function (a) {
+      .then(function (res) {
         db.Ghost.create({
-          fullName: a.data.name,
+          fullName: res.data.name,
           deadFor: 65,
           homeTown: "Arno, Virginia",
-          faveSport: a.data.sport,
+          faveSport: res.data.sport,
         })
           .then(() => {
-            d();
+            ghostTwoInfo();
           })
           .catch(() => {
             console.log();
@@ -43,18 +250,18 @@ module.exports = (a) => {
         console.log();
       });
   }
-  function d() {
+  function ghostTwoInfo() {
     axios
       .get("https://api.namefake.com/english-united-states/male/")
-      .then(function (a) {
+      .then(function (res) {
         db.Ghost.create({
-          fullName: a.data.name,
+          fullName: res.data.name,
           deadFor: 9,
           homeTown: "Cleveland, Ohio",
-          faveSport: a.data.sport,
+          faveSport: res.data.sport,
         })
           .then(() => {
-            e();
+            ghostThreeInfo();
           })
           .catch(() => {
             console.log();
@@ -64,15 +271,15 @@ module.exports = (a) => {
         console.log();
       });
   }
-  function e() {
+  function ghostThreeInfo() {
     axios
       .get("https://api.namefake.com/english-united-states/male/")
-      .then(function (a) {
+      .then(function (res) {
         db.Ghost.create({
-          fullName: a.data.name,
+          fullName: res.data.name,
           deadFor: 272,
           homeTown: "Liverpool, England",
-          faveSport: a.data.sport,
+          faveSport: res.data.sport,
         })
           .catch(() => {
             console.log();
@@ -82,127 +289,6 @@ module.exports = (a) => {
           });
       });
   }
-  a.get("/home/1", (a, b) => {
-    db.Ghost.findOne({ where: { deadFor: 170 }, raw: !0 })
-      .then((a) => {
-        let b = { fullName: a.fullName, deadFor: a.deadFor };
-        return b;
-      })
-      .then((a) => {
-        b.render("home", { entryGhost: a });
-      })
-      .catch((a) => {
-        console.log(a);
-      });
-  }),
-    a.post("/api/users", (a, b) => {
-      console.log(a.body),
-        db.User.create(a.body).then((a) => {
-          b.json(a);
-        });
-    }),
-    a.put("/api/users", function (a, b) {
-      console.log(a.data),
-        db.User.update(
-          { age: a.body.age, gender: a.body.gender },
-          { where: { identifier: 1 } }
-        ).then((a) => {
-          b.json(a);
-        });
-    }),
-    a.get("/room1/2", (a, b) => {
-      db.Ghost.findOne({ where: { deadFor: 65 }, raw: !0 })
-        .then((a) => {
-          let b = {
-            fullName: a.fullName,
-            deadFor: a.deadFor,
-            homeTown: a.homeTown,
-            faveSport: a.faveSport,
-          };
-          return b;
-        })
-        .then((a) => {
-          db.User.findOne({ where: { identifier: 1 }, raw: !0 })
-            .then((c) => {
-              let d = { fullName: c.fullName };
-              b.render("room1", { entryGhost: a, viewUser: d });
-            })
-            .catch((a) => {
-              console.log(a);
-            });
-        });
-    }),
-    a.get("/room2/3", (a, b) => {
-      db.Ghost.findOne({ where: { deadFor: 9 }, raw: !0 })
-        .then(function (a) {
-          let b = {
-            fullName: a.fullName,
-            deadFor: a.deadFor,
-            homeTown: a.homeTown,
-            faveSport: a.faveSport,
-          };
-          return b;
-        })
-        .then((a) => {
-          db.User.findOne({ where: { identifier: 1 }, raw: !0 })
-            .then((a) => {
-              let b = { fullName: a.fullName };
-              return b;
-            })
-            .then((c) => {
-              db.Ghost.findOne({ where: { deadFor: 170 }, raw: !0 }).then(
-                (d) => {
-                  let e = { fullName: d.fullName };
-                  b.render("room2", {
-                    entryGhost: a,
-                    viewUser: c,
-                    frontGhost: e,
-                  });
-                }
-              );
-            })
-            .catch((a) => {
-              console.log(a);
-            });
-        });
-    }),
-    a.get("/room3/4", (a, b) => {
-      3,
-        db.Ghost.findOne({ where: { deadFor: 272 }, raw: !0 })
-          .then(function (a) {
-            let b = {
-              fullName: a.fullName,
-              deadFor: a.deadFor,
-              homeTown: a.homeTown,
-              faveSport: a.faveSport,
-            };
-            return b;
-          })
-          .then((a) => {
-            db.Ghost.findOne({ where: { deadFor: 170 }, raw: !0 }).then((c) => {
-              let d = { fullName: c.fullName };
-              b.render("room3", { entryGhost: a, frontGhost: d });
-            });
-          })
-          .catch((a) => {
-            console.log(a);
-          });
-    }),
-    a.delete("/api/ghosts", function () {
-      db.Ghost.destroy({ where: { deadFor: [170, 65, 9, 272] } })
-        .then(() => {
-          b();
-        })
-        .catch(() => {
-          console.log();
-        });
-    }),
-    a.delete("/api/users", function () {
-      db.User.destroy({ where: { identifier: 1 } })
-        .then(() => {})
-        .catch(() => {
-          console.log();
-        });
-    }),
-    b();
+
+  // });
 };
