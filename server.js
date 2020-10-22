@@ -7,7 +7,6 @@ var compression = require('compression')
 
 // Sets up the Express App
 const app = express();
-app.use(compression({ filter: shouldCompress }))
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,6 +22,18 @@ app.set("view engine", "handlebars");
 
 require("./controllers/userController")(app);
 require("./controllers/htmlController")(app);
+
+app.use(compression({ filter: shouldCompress }))
+
+function shouldCompress (req, res) {
+  if (req.headers['x-no-compression']) {
+    // don't compress responses with this request header
+    return false
+  }
+ 
+  // fallback to standard filter function
+  return compression.filter(req, res)
+}
 
 // Syncing our sequelize models and then starting our Express app
 db.sequelize.sync({ force: true }).then(function () {
