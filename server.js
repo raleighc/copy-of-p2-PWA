@@ -2,10 +2,13 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
 const db = require("./models");
+var compression = require('compression')
 // const { Model } = require("sequelize/types");
 
 // Sets up the Express App
 const app = express();
+app.use(compression({ filter: shouldCompress }))
+
 const PORT = process.env.PORT || 3000;
 
 // Express Middleware
@@ -16,6 +19,7 @@ app.use(express.static("public"));
 // Handlebars Middleware
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
+
 
 require("./controllers/userController")(app);
 require("./controllers/htmlController")(app);
